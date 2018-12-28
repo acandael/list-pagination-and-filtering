@@ -17,6 +17,11 @@ FSJS project 2 - List Filter and Pagination
    scoped to that function.
 ***/
 
+const list = document.querySelector('ul.student-list');
+const numberOfPages = Math.ceil(list.children.length / 10);
+
+
+console.log(list.children);
 
 
 
@@ -35,6 +40,18 @@ FSJS project 2 - List Filter and Pagination
        "invoke" the function 
 ***/
 
+const showPage = (list, page) => {
+   for(let i = 0; i < list.children.length; i += 1) {
+      let firstItem = page - 9;
+      let lastItem = page;
+       if (i >= firstItem && i <= lastItem ) {
+          list.children[i].style.display = 'block';
+       } else {
+          list.children[i].style.display = 'none';
+       }
+   }
+}
+
 
 
 
@@ -42,6 +59,34 @@ FSJS project 2 - List Filter and Pagination
    Create the `appendPageLinks function` to generate, append, and add 
    functionality to the pagination buttons.
 ***/
+
+const appendPageLinks = () => {
+   const paginationDiv = document.createElement('div');
+   paginationDiv.className = 'pagination';
+   const pageDiv = document.querySelector('.page');
+   pageDiv.appendChild(paginationDiv);
+
+   const ul = document.createElement('ul');
+
+   for (let i = 1; i <= numberOfPages; i += 1) {
+      let li = document.createElement('li');
+      let a = document.createElement('a');
+      a.setAttribute('href', '#');
+      a.textContent = i;
+      if (i === 1) {
+         a.className = 'active';
+      }
+      a.addEventListener('click', () => {
+         showPage(list, parseInt(a.textContent) * 10);
+      })
+      li.appendChild(a);
+      ul.appendChild(li);
+   }
+
+   paginationDiv.appendChild(ul);
+}
+
+appendPageLinks();
 
 
 
