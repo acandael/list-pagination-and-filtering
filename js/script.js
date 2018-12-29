@@ -19,26 +19,18 @@ FSJS project 2 - List Filter and Pagination
 
 const list = document.querySelector('ul.student-list');
 const numberOfPages = Math.ceil(list.children.length / 10);
+let currentPage = 1;
+const paginationDiv = document.createElement('div');
+paginationDiv.className = 'pagination';
+const pageDiv = document.querySelector('.page');
+pageDiv.appendChild(paginationDiv);
+const ul = document.createElement('ul');
 
 
-console.log(list.children);
-
-
-
-/*** 
-   Create the `showPage` function to hide all of the items in the 
-   list except for the ten you want to show.
-
-   Pro Tips: 
-     - Keep in mind that with a list of 54 students, the last page 
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when 
-       you initially define the function, and it acts as a variable 
-       or a placeholder to represent the actual function `argument` 
-       that will be passed into the parens later when you call or 
-       "invoke" the function 
-***/
+/* The showPage function loops through all
+list items and displays 10 listitems of the
+page that was passed.
+*/
 
 const showPage = (list, page) => {
    for(let i = 0; i < list.children.length; i += 1) {
@@ -55,41 +47,46 @@ const showPage = (list, page) => {
 
 
 
-/*** 
-   Create the `appendPageLinks function` to generate, append, and add 
-   functionality to the pagination buttons.
-***/
+/* The appendPageLinks function generates 
+the pagination links and adds the 'active'
+class to the link that was clicked */
 
 const appendPageLinks = () => {
-   const paginationDiv = document.createElement('div');
-   paginationDiv.className = 'pagination';
-   const pageDiv = document.querySelector('.page');
-   pageDiv.appendChild(paginationDiv);
-
-   const ul = document.createElement('ul');
-
+   // loop through the pages dynamically
    for (let i = 1; i <= numberOfPages; i += 1) {
       let li = document.createElement('li');
       let a = document.createElement('a');
       a.setAttribute('href', '#');
       a.textContent = i;
-      if (i === 1) {
-         a.className = 'active';
-      }
-      a.addEventListener('click', () => {
+      
+      // When clicked show page and set current page
+      a.addEventListener('click', (e) => { 
+         const aLinks = document.querySelectorAll('a');
+         currentPage = parseInt(e.target.textContent);
+         /* loop through all the links and remove 'active' class
+          add active class for the link that was clicked */
+         for (let j = 1; j < aLinks.length; j += 1) {
+            let pageLink = aLinks[j];
+            let linkNumber = parseInt(pageLink.textContent);
+            if (linkNumber === currentPage) {
+               pageLink.setAttribute('class', 'active');
+            } else {
+               pageLink.removeAttribute('class');
+            }
+         }
          showPage(list, parseInt(a.textContent) * 10);
-      })
+      });
+
+      
+   
       li.appendChild(a);
       ul.appendChild(li);
    }
-
    paginationDiv.appendChild(ul);
 }
 
+// Initiate to first 10 students
+showPage(list, 10);
+
+// Generate the page links
 appendPageLinks();
-
-
-
-
-
-// Remember to delete the comments that came with this file, and replace them with your own code comments.
